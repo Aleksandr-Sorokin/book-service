@@ -16,24 +16,15 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "t_users")
+@Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Column(name = "id")
     private UUID id;
-    @Column(name = "login")
     private String login;
-    @Column(name = "password")
     private String password;
-    @Column(name = "firstName")
     private String firstName;
-    @Column(name = "lastName")
     private String lastName;
-    @Column(name = "roles")
-    private Role roles;
+    private String email;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }
