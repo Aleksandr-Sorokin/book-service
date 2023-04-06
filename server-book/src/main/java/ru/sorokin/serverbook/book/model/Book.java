@@ -4,16 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 import ru.sorokin.serverbook.author.model.Author;
 import ru.sorokin.serverbook.genres.model.Genres;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
-@Table(name = "t_books")
+@Table(name = "books")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,14 +20,25 @@ public class Book {
     @Id
     private UUID id;
     private String name;
-    @ElementCollection
-    @CollectionTable(name = "t_genres", joinColumns = @JoinColumn(name = "id"), indexes = {@Index(columnList = "index_list")})
-    @Column(name = "genre")
+    @ManyToMany
+    @JoinTable(name = "books_genres",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<Genres> genres;
-    @ElementCollection
-    @CollectionTable(name = "t_authors", joinColumns = @JoinColumn(name = "id"), indexes = {@Index(columnList = "index_list")})
-    @Column(name = "author")
-    private List<Author> authors;
+    @ManyToMany(mappedBy = "books")
+    private Set<Author> authors = new HashSet<>();
     private Integer publication;
     private Integer pages;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Book)) return false;
+        return id != null && id.equals(((Book) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
