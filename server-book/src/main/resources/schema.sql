@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS books, users;
+/*DROP TABLE IF EXISTS books, users;
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
@@ -56,4 +56,4 @@ CREATE TABLE IF NOT EXISTS comments
     created   TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT comments_items_id_fk FOREIGN KEY (item_id) REFERENCES items (id),
     CONSTRAINT comments_users_id_fk FOREIGN KEY (author_id) REFERENCES users (id)
-);
+);*/

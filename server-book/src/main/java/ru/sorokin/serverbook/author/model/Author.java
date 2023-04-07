@@ -4,10 +4,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 import ru.sorokin.serverbook.book.model.Book;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "authors")
@@ -17,11 +22,22 @@ import java.util.*;
 @NoArgsConstructor
 public class Author {
     @Id
+    @GeneratedValue
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator",
+            parameters = {
+                    @Parameter(
+                            name = "uuid_gen_strategy_class",
+                            value = "org.hibernate.id.uuid.CustomVersionStrategy"
+                    )
+            }
+    )
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
     private String name;
     private String lastName;
     private String nickname;
-    private Date birthday;
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE

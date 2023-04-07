@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 import ru.sorokin.serverbook.author.model.Author;
 import ru.sorokin.serverbook.genres.model.Genres;
 
@@ -18,17 +20,33 @@ import java.util.*;
 @AllArgsConstructor
 public class Book {
     @Id
+    @GeneratedValue
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator",
+            parameters = {
+                    @Parameter(
+                            name = "uuid_gen_strategy_class",
+                            value = "org.hibernate.id.uuid.CustomVersionStrategy"
+                    )
+            }
+    )
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
     private String name;
-    @ManyToMany
-    @JoinTable(name = "books_genres",
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "book_genre",
             joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "genre_id"))
-    private List<Genres> genres;
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private Set<Genres> genres;
     @ManyToMany(mappedBy = "books")
     private Set<Author> authors = new HashSet<>();
     private Integer publication;
     private Integer pages;
+    @Basic
+    @Temporal(TemporalType.DATE)
+    private Date release;
 
     @Override
     public boolean equals(Object o) {
