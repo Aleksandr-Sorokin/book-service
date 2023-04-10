@@ -10,7 +10,7 @@ public class AuthService implements Authentication{
     private final UserRepository userRepository;
     @Override
     public void register(String login, String password) {
-        if (userRepository)
+       // if (userRepository)
     }
 
     @Override

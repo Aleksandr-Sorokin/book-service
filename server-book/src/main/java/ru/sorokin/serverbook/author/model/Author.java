@@ -1,9 +1,6 @@
 package ru.sorokin.serverbook.author.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import ru.sorokin.serverbook.book.model.Book;
@@ -18,8 +15,8 @@ import java.util.UUID;
 @Table(name = "authors")
 @Getter
 @Setter
-@RequiredArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Author {
     @Id
     @GeneratedValue
