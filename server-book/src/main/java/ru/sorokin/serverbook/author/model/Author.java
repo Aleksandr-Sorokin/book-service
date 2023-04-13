@@ -1,15 +1,15 @@
 package ru.sorokin.serverbook.author.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import ru.sorokin.serverbook.book.model.Book;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "authors")
@@ -32,9 +32,15 @@ public class Author {
     )
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
+    @Column(name = "name", nullable = false)
     private String name;
+    @Column(name = "lastName", nullable = false)
     private String lastName;
     private String nickname;
+    @Basic
+    @Temporal(TemporalType.DATE)
+    @Column(name = "birthday", nullable = false)
+    private Date birthday;
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
@@ -45,25 +51,16 @@ public class Author {
     )
     private Set<Book> books = new HashSet<>();
 
-    public void addBook(Book book) {
-        this.books.add(book);
-        book.getAuthors().add(this);
-    }
-
-    public void removeBook(Book book) {
-        this.books.remove(book);
-        book.getAuthors().remove(this);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Author)) return false;
-        return id != null && id.equals(((Author) o).getId());
+        Author author = (Author) o;
+        return name.equals(author.name) && lastName.equals(author.lastName) && Objects.equals(nickname, author.nickname) && birthday.equals(author.birthday);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(name, lastName, nickname, birthday);
     }
 }

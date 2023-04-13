@@ -33,6 +33,7 @@ public class Book {
     )
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
+    @Column(name = "name", nullable = false)
     private String name;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "book_genre",
@@ -42,21 +43,28 @@ public class Book {
     private Set<Genres> genres;
     @ManyToMany(mappedBy = "books")
     private Set<Author> authors = new HashSet<>();
+    @Column(name = "publication", nullable = false)
     private Integer publication;
+    @Column(name = "pages", nullable = false)
     private Integer pages;
     @Basic
     @Temporal(TemporalType.DATE)
+    @Column(name = "release", nullable = false)
     private Date release;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Book)) return false;
-        return id != null && id.equals(((Book) o).getId());
+        Book book = (Book) o;
+        return name.equals(book.name)
+                && authors.equals(book.authors)
+                && publication.equals(book.publication)
+                && release.equals(book.release);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(name, authors, publication, release);
     }
 }
